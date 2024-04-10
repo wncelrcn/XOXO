@@ -8,11 +8,14 @@
 import Foundation
 import SwiftUI
 
-
+// initialize struct for the "X" and "O"
 struct Cell {
     var tile: Tile
     
+    // function for display of "X" and "O" in the Tic-Tac-Toe Board
     func displayTile() -> String {
+        
+        // switch cases for the diff cases ?!
         switch (tile){
         case Tile.Nought:
             return "0"
@@ -23,19 +26,20 @@ struct Cell {
         }
     }
     
+    // function for the tile color
     func tileColor() -> Color {
         switch (tile){
         case Tile.Nought:
             return Color.blue
         case Tile.Cross:
-            return Color.black
+            return Color.red
         default:
             return Color.black
         }
     }
 }
 
-
+// enum for the different cases of the tile (could be X, O, or Empty)
 enum Tile {
     case Nought
     case Cross
