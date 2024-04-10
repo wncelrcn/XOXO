@@ -112,12 +112,32 @@ class GameState: ObservableObject{
         return board[row][column].tile == turn
     }
     
-    
-    func isDraw () -> Bool {
+    // function to see if the game ends in a draw
+    func isDraw() -> Bool {
         
+        // Check for a draw condition first
         
-        return true
+        var isBoardFull = true
+        for row in board {
+            for cell in row {
+                if cell.tile == Tile.Empty {
+                    
+                    // If any cell is empty, the game is not a draw
+                    isBoardFull = false
+                    break
+                    
+                }
+            }
+        }
+        
+        if isBoardFull {
+            // If the board is full, and there's no winner, it's a draw
+            return !isWin()
+        }
+        
+        return false
     }
+
     
     // function for resetting the board
     func resetBoard() {
