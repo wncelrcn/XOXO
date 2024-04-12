@@ -8,56 +8,77 @@
 import SwiftUI
 
 struct ContentView: View {
-    // initialize the gamestate
-    @StateObject var gameState = GameState()
     
+    //initialize player names and the gameState class
+    @StateObject var gameState = GameState()
+    @State private var player1Name = "Player 1"
+    @State private var player2Name = "Player 2"
+    
+    // size of the cells
+    let cellSize: CGFloat = 100
     
     var body: some View {
-        //set borderSize
-        let borderSize = CGFloat(5)
-        
-        // create a vertical stack
-        VStack(spacing: borderSize){
-            
-            // for each loop for each button create a hstack
-            ForEach(0...2, id: \.self){
-                row in
-                HStack(spacing: borderSize){
-                    
-                    // for each loop for the "X" and "O" inside
-                    ForEach(0...2, id: \.self){
-                        
-                        column in
-                        
-                        let cell = gameState.board[row][column]
-                        
-                        Text(cell.displayTile())
-                        // board properties
-                            .font(.system(size: 60))
-                            .foregroundColor(cell.tileColor())
-                            .bold()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .aspectRatio(1, contentMode: .fit)
-                            .background(Color.white)
-                            .onTapGesture {
-                                gameState.placeTile(row, column)
-                            }
-                        
+        VStack {
+            // game title properties
+            Text("XOXO: Tic-Tac-Toe")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding()
+                .foregroundColor(.black)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            // text showing current turn
+            Text(gameState.turnText())
+                .font(.title)
+                .bold()
+                .padding()
+            // input player names
+            HStack {
+                TextField("Player 1 Name", text: $gameState.player1Name)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                TextField("Player 2 Name", text: $gameState.player2Name)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+            }
+            // tictactoe board properties
+            VStack(spacing: 0) {
+                ForEach(0..<3) { row in
+                    HStack(spacing: 0) {
+                        ForEach(0..<3) { column in
+                            CellView(cell: gameState.board[row][column])
+                                .frame(width: cellSize, height: cellSize)
+                                .background(Color.white)
+                                .border(Color.black, width: 1)
+                                .onTapGesture {
+                                    gameState.placeTile(row, column)
+                                }
+                        }
                     }
                 }
             }
+            .background(Color.black)
+            
+            // display player 1 score
+            Text(String(format: "%@: %d", gameState.player1Name, gameState.player1Score))
+                .font(.title)
+                .bold()
+                .padding()
+            // display player 2 score
+            Text(String(format: "%@: %d", gameState.player2Name, gameState.player2Score))
+                .font(.title)
+                .bold()
+                .padding()
+            
+            Spacer()
         }
-        
-        .background(Color.black)
         .padding()
         
-        // alert message if player 1 or 2 wins, and if game is draw
-        .alert(isPresented: $gameState.showAlert)
-        {
+        // alert when there is someone who won or if draw
+        .alert(isPresented: $gameState.showAlert) {
             Alert(
                 title: Text(gameState.alertMsg),
-                dismissButton: .default(Text("Okay"))
-                {
+                dismissButton: .default(Text("Okay")) {
                     gameState.resetBoard()
                 }
             )
@@ -65,6 +86,22 @@ struct ContentView: View {
     }
 }
 
-#Preview {
-    ContentView()
+// struct for the tile cells
+struct CellView: View {
+    let cell: Cell
+    
+    var body: some View {
+        Text(cell.displayTile())
+            .font(.system(size: 60))
+            .foregroundColor(cell.tileColor())
+            .bold()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .aspectRatio(1, contentMode: .fit)
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }

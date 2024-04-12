@@ -18,53 +18,49 @@ class GameState: ObservableObject{
     @Published var showAlert = false
     @Published var alertMsg = "Draw"
     
+    @Published var player1Name = "Player 1"
+    @Published var player2Name = "Player 2"
+    
     // initialize
     init() {
         resetBoard()
     }
     
-    // function for placing the "X" and "O" in the board
-    func placeTile (_ row: Int, _ column: Int){
-        
-        // check if the spot in the board is already occupied
-        if(board[row][column].tile != Tile.Empty){
-            return
-        }
-        
-        // first turn is always "O"
-        board[row][column].tile = turn == Tile.Nought ? Tile.Nought : Tile.Cross
-        
-        // conditional to check if somebody won
-        if (isWin()) {
-            
-            // if its "O"'s turn, add score to player1
-            if (turn == Tile.Nought){
-                player1Score += 1
+    // on click function on the tic-tac-toe board
+    func placeTile (_ row: Int, _ column: Int) {
+        // checking if that certain tile is already occupied
+            if(board[row][column].tile != Tile.Empty){
+                return
             }
+            
+            board[row][column].tile = turn == Tile.Nought ? Tile.Nought : Tile.Cross
+            
+        // if there is a winner
+            if (isWin()) {
+                if (turn == Tile.Nought){
+                    player1Score += 1
+                }
+                else {
+                    player2Score += 1
+                }
+                
+                // winner
+                let winner = turn == Tile.Nought ? player1Name : player2Name
+                
+                alertMsg = "\(winner) Wins!"
+                showAlert = true
+            }
+            
+        // if there is still not a winner, initialize the next turn
             else {
-                // if its "X"'s turn, add score to player2
-                player2Score += 1
+                turn = turn == Tile.Nought ? Tile.Cross : Tile.Nought
             }
-            
-            let winner = turn == Tile.Nought ? "Player 1" : "Player 2"
-            
-            alertMsg = "\(winner) Wins!"
-            
-            showAlert = true
+            // if there is a draw
+            if (isDraw()) {
+                alertMsg = "It's a Draw!"
+                showAlert = true
+            }
         }
-        
-        else {
-            // next turn
-            turn = turn == Tile.Nought ? Tile.Cross : Tile.Nought
-        }
-        
-        // conditional to check if its a draw
-        if (isDraw()) {
-            alertMsg = "Its a Draw!"
-            showAlert = true
-        }
-    
-    }
     
     // function to check who won the game
     func isWin() -> Bool {
@@ -139,22 +135,19 @@ class GameState: ObservableObject{
     }
 
     
-    // function for resetting the board
     func resetBoard() {
-        
-        var newBoard = [[Cell]]()
-        
-        for _ in (0...2) {
-            
-            var row = [Cell]()
-            
+            var newBoard = [[Cell]]()
             for _ in (0...2) {
-                
-                row.append(Cell(tile: Tile.Empty))
-                
+                var row = [Cell]()
+                for _ in (0...2) {
+                    row.append(Cell(tile: Tile.Empty))
+                }
+                newBoard.append(row)
             }
-            newBoard.append(row)
+            board = newBoard
         }
-        board = newBoard
-    }
+        
+        func turnText() -> String {
+            return turn == Tile.Cross ? "\(player2Name)'s Turn: X" : "\(player1Name)'s Turn: O"
+        }
 }
