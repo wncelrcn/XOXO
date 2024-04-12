@@ -25,42 +25,35 @@ class GameState: ObservableObject{
     init() {
         resetBoard()
     }
-    
-    // on click function on the tic-tac-toe board
-    func placeTile (_ row: Int, _ column: Int) {
-        // checking if that certain tile is already occupied
-            if(board[row][column].tile != Tile.Empty){
-                return
-            }
-            
-            board[row][column].tile = turn == Tile.Nought ? Tile.Nought : Tile.Cross
-            
-        // if there is a winner
-            if (isWin()) {
-                if (turn == Tile.Nought){
-                    player1Score += 1
-                }
-                else {
-                    player2Score += 1
-                }
-                
-                // winner
-                let winner = turn == Tile.Nought ? player1Name : player2Name
-                
-                alertMsg = "\(winner) Wins!"
-                showAlert = true
-            }
-            
-        // if there is still not a winner, initialize the next turn
-            else {
-                turn = turn == Tile.Nought ? Tile.Cross : Tile.Nought
-            }
-            // if there is a draw
-            if (isDraw()) {
-                alertMsg = "It's a Draw!"
-                showAlert = true
-            }
+    // onclick function if the tile is placed
+    func placeTile(_ row: Int, _ column: Int) {
+        if board[row][column].tile != Tile.Empty {
+            return
         }
+        
+        board[row][column].tile = turn == Tile.Nought ? Tile.Nought : Tile.Cross
+        
+        if isWin() {
+            if turn == Tile.Nought {
+                player1Score += 1
+            } else {
+                player2Score += 1
+            }
+            
+            let winner = turn == Tile.Nought ? player1Name : player2Name
+            alertMsg = "\(winner) Wins!"
+            showAlert = true
+            turn = Tile.Nought // Reset turn to "O"
+        } else if isDraw() {
+            alertMsg = "It's a Draw!"
+            showAlert = true
+            turn = Tile.Nought // Reset turn to "O"
+        } else {
+            turn = turn == Tile.Nought ? Tile.Cross : Tile.Nought
+        }
+    }
+
+
     
     // function to check who won the game
     func isWin() -> Bool {
