@@ -32,6 +32,7 @@ This is a simple and fun Tic-Tac-Toe Game built using Swift and SwiftUI.
 > ❗️ Win Logic & Draw Logic
 >
 > This game is a clone of the famous Tic-Tac-Toe game, and it has the same mechanics and win conditions.
+
 > [!NOTE]
 > ![image](https://github.com/wncelrcn/XOXO/assets/107752649/9ac5fcf8-5724-4909-8f28-23bf6dd4a97b)
 > ![image](https://github.com/wncelrcn/XOXO/assets/107752649/6115158a-288d-49ae-88a1-12e0d142790e)
